@@ -8,6 +8,66 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
+    
+        /* Position the toggle in the top right */
+        .theme-switch-wrapper {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        /* Adjusted Uiverse Toggle - Horizontal & Small */
+        .toggle {
+          width: 50px;
+          height: 26px;
+          background-color: #333;
+          border-radius: 50px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          padding: 0 4px;
+          transition: background-color 300ms;
+          position: relative;
+        }
+        
+        .toggle__circle {
+          width: 20px;
+          height: 20px;
+          background-color: white;
+          border-radius: 50%;
+          transition: transform 300ms ease-in-out;
+        }
+        
+        #check:checked + .toggle {
+          background-color: #6366f1; /* Your accent color */
+        }
+        
+        #check:checked + .toggle > .toggle__circle {
+          transform: translateX(22px);
+        }
+        
+        /* Light Mode Color Variables */
+        body.light-mode {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --glass: rgba(0, 0, 0, 0.05);
+        }
+        
+        body.light-mode .mesh {
+            background: radial-gradient(circle at 50% 50%, #e2e8f0 0%, #f8fafc 100%);
+        }
+        
+        body.light-mode .card {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #1e293b;
+        }
+
+        
+        
         :root {
             --bg: #0a0a0c;
             --accent: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
@@ -129,6 +189,14 @@
     </style>
 </head>
 <body>
+    <div class="theme-switch-wrapper">
+    <span style="font-size: 0.8rem; opacity: 0.7;"><i class="fas fa-sun"></i> / <i class="fas fa-moon"></i></span>
+    <input hidden="" id="check" name="check" type="checkbox">
+    <label class="toggle" for="check">
+        <div class="toggle__circle"></div>
+    </label>
+</div>
+
 
 <div class="mesh"></div>
 
@@ -222,6 +290,25 @@
 </div>
 
 <script>
+const checkbox = document.getElementById('check');
+
+checkbox.addEventListener('change', () => {
+  document.body.classList.toggle('light-mode');
+  
+  // Save preference to local storage so it stays on refresh
+  if (document.body.classList.contains('light-mode')) {
+    localStorage.setItem('theme', 'light');
+  } else {
+    localStorage.setItem('theme', 'dark');
+  }
+});
+
+// Check for saved theme on page load
+if (localStorage.getItem('theme') === 'light') {
+  checkbox.checked = true;
+  document.body.classList.add('light-mode');
+}
+
     // Smooth fade-in animation on scroll
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
